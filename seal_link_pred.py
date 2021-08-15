@@ -365,6 +365,8 @@ parser.add_argument('--test_multiple_models', action='store_true',
                     help="test multiple models together")
 parser.add_argument('--use_heuristic', type=str, default=None, 
                     help="test a link prediction heuristic (CN or AA)")
+parser.add_argument('--device', type=int, default=2)
+parser.add_argument('--dropout', type=float, default=0.2)
 args = parser.parse_args()
 
 if args.save_appendix == '':
@@ -439,8 +441,10 @@ elif args.eval_metric == 'auc':
     loggers = {
         'AUC': Logger(args.runs, args),
     }
-    
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+#device = torch.device('cuda:2')
+device = torch.device('cuda:{}'.format(args.device))
+#device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 if args.use_heuristic:
     # Test link prediction heuristics.
@@ -581,6 +585,11 @@ for run in range(args.runs):
         model = DGCNN(args.hidden_channels, args.num_layers, max_z, args.sortpool_k, 
                       train_dataset, args.dynamic_train, use_feature=args.use_feature, 
                       node_embedding=emb).to(device)
+    if args.model == 'DGCNN1':
+        model = DGCNN1(args.hidden_channels, args.num_layers, max_z, args.sortpool_k, 
+                      train_dataset, args.dynamic_train, use_feature=args.use_feature, 
+                      node_embedding=emb, dropout=args.dropout).to(device)
+ 
     elif args.model == 'SAGE':
         model = SAGE(args.hidden_channels, args.num_layers, max_z, train_dataset,  
                      args.use_feature, node_embedding=emb).to(device)
