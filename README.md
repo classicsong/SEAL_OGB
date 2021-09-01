@@ -55,6 +55,9 @@ According to OGB, this dataset allows including validation links in training whe
 
 For the above three datasets, append "--runs 10" to do experiments for 10 times and get the average results.
 
+#### ogbl-ddi-ngnn
+    python3 seal_link_pred.py --dataset ogbl-ddi --num_hops 1 --ratio_per_hop 0.2 --use_edge_weight --eval_steps 1 --epochs 10 --dynamic_val --dynamic_test --train_percent 1 --test_percent 100 --runs 5 --device 6 --model DGCNN1 
+
 ### ogbl-citation2
 
     python seal_link_pred.py --dataset ogbl-citation2 --num_hops 1 --use_feature --use_edge_weight --eval_steps 1 --epochs 10 --dynamic_train --dynamic_val --dynamic_test --train_percent 2 --val_percent 1 --test_percent 1

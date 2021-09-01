@@ -585,8 +585,12 @@ for run in range(args.runs):
         model = DGCNN(args.hidden_channels, args.num_layers, max_z, args.sortpool_k, 
                       train_dataset, args.dynamic_train, use_feature=args.use_feature, 
                       node_embedding=emb).to(device)
-    if args.model == 'DGCNN1':
+    elif args.model == 'DGCNN1':
         model = DGCNN1(args.hidden_channels, args.num_layers, max_z, args.sortpool_k, 
+                      train_dataset, args.dynamic_train, use_feature=args.use_feature, 
+                      node_embedding=emb, dropout=args.dropout).to(device)
+    elif args.model == 'DGCNN2':
+        model = DGCNN2(args.hidden_channels, args.num_layers, max_z, args.sortpool_k, 
                       train_dataset, args.dynamic_train, use_feature=args.use_feature, 
                       node_embedding=emb, dropout=args.dropout).to(device)
  
@@ -606,11 +610,11 @@ for run in range(args.runs):
     optimizer = torch.optim.Adam(params=parameters, lr=args.lr)
     total_params = sum(p.numel() for param in parameters for p in param)
     print(f'Total number of parameters is {total_params}')
-    if args.model == 'DGCNN':
+    if args.model == 'DGCNN' or args.model=='DGCNN1' or args.model=='DGCNN2':
         print(f'SortPooling k is set to {model.k}')
     with open(log_file, 'a') as f:
         print(f'Total number of parameters is {total_params}', file=f)
-        if args.model == 'DGCNN':
+        if args.model == 'DGCNN' or args.model=='DGCNN1' or args.model=='DGCNN2':
             print(f'SortPooling k is set to {model.k}', file=f)
 
     start_epoch = 1
